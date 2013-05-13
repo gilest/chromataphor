@@ -1,0 +1,9 @@
+Status bar app guide
+http://cocoatutorial.grapewave.com/2010/01/creating-a-status-bar-application/
+
+Status bar app delegate example
+http://speedy.ms.northwestern.edu/websvn/filedetails.php?repname=sectioner.sectioner-controller-mac&path=%2Ftrunk%2FStatusBarAppAppDelegate.mm
+
+API refs for NSStatusBar and NSMenu
+https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/ApplicationKit/Classes/NSStatusBar_Class/Reference/Reference.html
+https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/ApplicationKit/Classes/NSMenu_Class/Reference/Reference.html
