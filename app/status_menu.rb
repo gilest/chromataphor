@@ -13,13 +13,13 @@ class AppDelegate
     @statusMenu = NSMenu.alloc.initWithTitle(@appName)
 
     # reboot to os menu items - they do nothing right now
-    item = NSMenuItem.alloc.initWithTitle('Reboot to OS X', action: '', keyEquivalent: '')
+    item = NSMenuItem.alloc.initWithTitle('Reboot to OS X', action: 'rebootToMac', keyEquivalent: '')
     @statusMenu.addItem item
 
-    item = NSMenuItem.alloc.initWithTitle('Reboot to Windows', action: '', keyEquivalent: '')
+    item = NSMenuItem.alloc.initWithTitle('Reboot to Windows', action: 'rebootToWindows', keyEquivalent: '')
     @statusMenu.addItem item
 
-    item = NSMenuItem.alloc.initWithTitle('Reboot to Linux', action: '', keyEquivalent: '')
+    item = NSMenuItem.alloc.initWithTitle('Reboot to Linux', action: 'rebootToLinux', keyEquivalent: '')
     @statusMenu.addItem item
 
     # separator
@@ -47,6 +47,21 @@ class AppDelegate
   def createStatusItem
     statusItem = NSStatusBar.systemStatusBar.statusItemWithLength(NSVariableStatusItemLength).retain
     statusItem
+  end
+
+  def rebootToMac
+    @bootPlist.defaultPartition = 'hd(1,0)'
+    @bootPlist.save
+  end
+
+  def rebootToWindows
+    @bootPlist.defaultPartition = 'hd(1,2)'
+    @bootPlist.save
+  end
+
+  def rebootToLinux
+    @bootPlist.defaultPartition = 'hd(2,3)'
+    @bootPlist.save
   end
 
   def showPreferences

@@ -5,6 +5,8 @@ class AppDelegate
     @appName = NSBundle.mainBundle.infoDictionary['CFBundleName']
     # create a new instance of the prefs controller, which also builds the window itself
     @prefsController = PrefsController.new
+    # create a new instance of the boot plist model
+    @bootPlist = BootPlist.new
     # finally, build our status menu itself
     buildStatusMenu
   end
