@@ -12,15 +12,18 @@ class AppDelegate
     # build a menu for it
     @statusMenu = NSMenu.alloc.initWithTitle(@appName)
 
-    # reboot to os menu items - they do nothing right now
-    item = NSMenuItem.alloc.initWithTitle('Reboot to OS X', action: 'rebootToMac', keyEquivalent: '')
-    @statusMenu.addItem item
-
-    item = NSMenuItem.alloc.initWithTitle('Reboot to Windows', action: 'rebootToWindows', keyEquivalent: '')
-    @statusMenu.addItem item
-
-    item = NSMenuItem.alloc.initWithTitle('Reboot to Linux', action: 'rebootToLinux', keyEquivalent: '')
-    @statusMenu.addItem item
+    # if there are no user added partitions eg. on a fresh launch
+    if @preferences.bootPartitions.empty?
+      item = NSMenuItem.alloc.initWithTitle("Add your partitions...", action: 'showPreferences', keyEquivalent: '')
+      @statusMenu.addItem item
+    else
+      # programatically build and add users boot partitions from their preferences file
+      @preferences.bootPartitions.each do |partition|
+        item = NSMenuItem.alloc.initWithTitle("Reboot to #{partition[:name]}", action: 'rebootTo:', keyEquivalent: '')
+        item.setRepresentedObject partition
+        @statusMenu.addItem item
+      end
+    end
 
     # separator
     @statusMenu.addItem NSMenuItem.separatorItem
@@ -49,18 +52,9 @@ class AppDelegate
     statusItem
   end
 
-  def rebootToMac
-    @bootPlist.defaultPartition = 'hd(1,0)'
-    @bootPlist.save
-  end
-
-  def rebootToWindows
-    @bootPlist.defaultPartition = 'hd(1,2)'
-    @bootPlist.save
-  end
-
-  def rebootToLinux
-    @bootPlist.defaultPartition = 'hd(2,3)'
+  def rebootTo(sender)
+    partition = sender.representedObject
+    @bootPlist.defaultPartition = partition[:reference]
     @bootPlist.save
   end
 
