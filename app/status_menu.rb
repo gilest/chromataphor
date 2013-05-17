@@ -4,8 +4,10 @@ class AppDelegate
 
     # create status item object
     @statusItem = createStatusItem()
-    # set its title
-    @statusItem.setTitle("C")
+    # set its image
+    path = NSBundle.mainBundle.pathForResource("icon16", ofType:"png")
+    image = NSImage.alloc.initWithContentsOfFile(path)
+    @statusItem.setImage(image)
     # set highlitght mode
     @statusItem.setHighlightMode(true)
 
