@@ -61,7 +61,7 @@ class AppDelegate
   end
 
   def showPreferences
-    @prefsController.show
+    @prefsWindowController.show
   end
 
   def showAbout

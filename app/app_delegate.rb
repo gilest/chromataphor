@@ -8,7 +8,7 @@ class AppDelegate
     # create a new instance of the boot plist model for reading and writing the boot plist
     @bootPlist = BootPlist.new
     # create a new instance of the prefs controller, which also builds the window itself
-    @prefsController = PrefsController.new
+    @prefsWindowController = PrefsWindowController.alloc.init
     # finally, build our status menu itself
     buildStatusMenu
   end
