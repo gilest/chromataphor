@@ -61,7 +61,8 @@ class AppDelegate
   end
 
   def showPreferences
-    @prefsWindowController.show
+    @prefsWindow.makeKeyAndOrderFront(self)
+    NSApp.activateIgnoringOtherApps(true)
   end
 
   def showAbout

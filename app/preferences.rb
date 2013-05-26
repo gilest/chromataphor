@@ -4,7 +4,7 @@ class Preferences
     @preferences = NSUserDefaults.standardUserDefaults.retain
     default_values = {
                        bootPartitions: [
-                         { name: 'Mac', reference: 'hd(0,2)', enabled: false , current: false },
+                         { name: 'Mac', reference: 'hd(0,2)', enabled: true , current: false },
                          { name: 'Windows', reference: 'hd(1,2)', enabled: false, current: false },
                          { name: 'Linux', reference: 'hd(1,4)', enabled: false, current: false }
                        ]
