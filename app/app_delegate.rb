@@ -15,6 +15,4 @@ class AppDelegate
     buildStatusMenu
   end
 
-  
-
 end

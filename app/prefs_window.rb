@@ -25,6 +25,8 @@ class AppDelegate
   def buildParitionList
     # yValue seems to be the location in pixels from the bottom of the window, so we decrement as we add lines
     yValue = 318
+    # tag for assigning ints to NSControl objects so that we can group their values when we save
+    tag = 0
     # iterate over all the paritions within the preferences
     @preferences.bootPartitions.each do |partition|
 
@@ -32,12 +34,14 @@ class AppDelegate
       parition_name = NSTextField.alloc.initWithFrame(NSMakeRect(20, yValue, 120, 22))
       parition_name.stringValue = partition[:name]
       parition_name.autoresizingMask = NSViewMinXMargin|NSViewMinYMargin|NSViewWidthSizable
+      parition_name.setTag tag
       @prefsWindow.contentView.addSubview(parition_name)
 
       # and the reference
       partition_reference = NSTextField.alloc.initWithFrame(NSMakeRect(160, yValue, 60, 22))
       partition_reference.stringValue = partition[:reference]
       partition_reference.autoresizingMask = NSViewMinXMargin|NSViewMinYMargin|NSViewWidthSizable
+      partition_reference.setTag tag
       @prefsWindow.contentView.addSubview(partition_reference)
 
       # and a checkbox for enabling/disabling
@@ -51,15 +55,39 @@ class AppDelegate
         NSOffState
       end
       partition_enabled.setState state
+      partition_enabled.setTag tag
       @prefsWindow.contentView.addSubview(partition_enabled)
 
       # decrement the yValue for the next row
       yValue = yValue - 26
+      # inrement the tag for the next row
+      tag = tag + 1
     end
   end
 
   def savePreferences(sender)
-    puts "This would save the prefs"
+
+    # load all of the pref window subviews into an object so that we can make sense of them
+    @bootPartitionFields = @prefsWindow.contentView.subviews.group_by(&:tag)
+
+    # remove the save button. i can refactor out the need to do this later
+    # by putting all the partition forms in a subview
+    @bootPartitionFields.delete(-1)
+
+    # initialize a new array to satisfy our preferences storage format
+    @bootPartitionValues = []
+
+    # for each grouped set of NSControls in our hash, we can create a nice tidy preference item 
+    @bootPartitionFields.each_value do |fields|
+      @bootPartitionValues << { name: fields[0].objectValue, reference: fields[1].objectValue, enabled: fields[2].objectValue, current: false }
+    end
+
+    puts @bootPartitionValues
+
+    # set and syncronise the preferences
+    @preferences.bootPartitions = @bootPartitionValues
+    @preferences.sync
+
   end
 
 end
