@@ -27,36 +27,22 @@ class AppDelegate
     yValue = 318
     # tag for assigning ints to NSControl objects so that we can group their values when we save
     tag = 0
+
+    # create field lables for columns
+    addLabel 'Partition name', 20, yValue, 120, 22
+    addLabel 'Reference', 160, yValue, 80, 22
+    addLabel 'Enabled', 260, yValue, 60, 22
+
+    # decrement the yValue for the next row
+    yValue = yValue - 26
+
     # iterate over all the paritions within the preferences
     @preferences.bootPartitions.each do |partition|
 
-      # create a field for the name
-      parition_name = NSTextField.alloc.initWithFrame(NSMakeRect(20, yValue, 120, 22))
-      parition_name.stringValue = partition[:name]
-      parition_name.autoresizingMask = NSViewMinXMargin|NSViewMinYMargin|NSViewWidthSizable
-      parition_name.setTag tag
-      @prefsWindow.contentView.addSubview(parition_name)
-
-      # and the reference
-      partition_reference = NSTextField.alloc.initWithFrame(NSMakeRect(160, yValue, 60, 22))
-      partition_reference.stringValue = partition[:reference]
-      partition_reference.autoresizingMask = NSViewMinXMargin|NSViewMinYMargin|NSViewWidthSizable
-      partition_reference.setTag tag
-      @prefsWindow.contentView.addSubview(partition_reference)
-
-      # and a checkbox for enabling/disabling
-      partition_enabled = NSButton.alloc.initWithFrame(NSMakeRect(240, yValue, 60, 22))
-      partition_enabled.setButtonType(NSSwitchButton)
-      partition_enabled.setTitle 'Enabled'
-      state = case partition[:enabled]
-      when true
-        NSOnState
-      when false
-        NSOffState
-      end
-      partition_enabled.setState state
-      partition_enabled.setTag tag
-      @prefsWindow.contentView.addSubview(partition_enabled)
+      # and add fields for them
+      addTextField partition[:name],      tag, 20,  yValue, 120, 22
+      addTextField partition[:reference], tag, 160, yValue, 80,  22
+      addCheckbox  partition[:enabled],   tag, 260, yValue, 60,  22
 
       # decrement the yValue for the next row
       yValue = yValue - 26
@@ -88,6 +74,42 @@ class AppDelegate
     @preferences.bootPartitions = @bootPartitionValues
     @preferences.sync
 
+  end
+
+  private
+
+  def addLabel(text, x, y, w, h)
+    label = NSTextField.alloc.initWithFrame(NSMakeRect(x, y, w, h))
+    label.stringValue = text
+    label.setBezeled(false)
+    label.setDrawsBackground(false)
+    label.setEditable(false)
+    label.setSelectable(false)
+    label.autoresizingMask = NSViewMinXMargin|NSViewMinYMargin|NSViewWidthSizable
+    @prefsWindow.contentView.addSubview(label)
+  end
+
+  def addTextField(value, tag, x, y, w, h)
+    field = NSTextField.alloc.initWithFrame(NSMakeRect(x, y, w, h))
+    field.stringValue = value
+    field.autoresizingMask = NSViewMinXMargin|NSViewMinYMargin|NSViewWidthSizable
+    field.setTag tag
+    @prefsWindow.contentView.addSubview(field)
+  end
+
+  def addCheckbox(value, tag, x, y, w, h)
+    partition_enabled = NSButton.alloc.initWithFrame(NSMakeRect(x, y, w, h))
+    partition_enabled.setButtonType(NSSwitchButton)
+    partition_enabled.setTitle 'Enabled'
+    state = case value
+    when true
+      NSOnState
+    when false
+      NSOffState
+    end
+    partition_enabled.setState state
+    partition_enabled.setTag tag
+    @prefsWindow.contentView.addSubview(partition_enabled)
   end
 
 end
