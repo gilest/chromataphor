@@ -1,8 +1,17 @@
 class BootPlist
 
-  def initialize
-    @path = "/Extra/org.chameleon.Boot.plist"
-    @contents = NSMutableDictionary.dictionaryWithContentsOfFile(@path)
+  def initialize(preferences)
+    @preferences = preferences
+    if file_exists?
+      puts "boot plist file EXISTS at #{@preferences.plistPath}"
+    else
+      puts "boot plist file DOES NOT EXIST at #{@preferences.plistPath}"
+    end
+    @contents = NSMutableDictionary.dictionaryWithContentsOfFile(@preferences.plistPath)
+  end
+
+  def file_exists?
+    NSFileManager.defaultManager.fileExistsAtPath(@preferences.plistPath)
   end
 
   def defaultPartition
@@ -14,7 +23,7 @@ class BootPlist
   end
 
   def save
-    @contents.writeToFile(@path, atomically: true)
+    @contents.writeToFile(@preferences.plistPath, atomically: true)
   end
 
 end
