@@ -8,7 +8,7 @@ class Preferences
                          { name: 'Windows', reference: 'hd(1,2)', enabled: false, current: false },
                          { name: 'Linux', reference: 'hd(1,4)', enabled: false, current: false }
                        ],
-                       plistPath: "/Extra/org.chameleon.Boot.plist"
+                       plistPath: '/Extra/org.chameleon.Boot.plist'
                      }
     @preferences.registerDefaults(default_values)
   end
@@ -19,6 +19,7 @@ class Preferences
 
   def bootPartitions= (value)
     @preferences[:bootPartitions] = value
+    sync
   end
 
   def plistPath
@@ -27,6 +28,7 @@ class Preferences
 
   def plistPath= (value)
     @preferences[:plistPath] = value
+    sync
   end
 
   def sync

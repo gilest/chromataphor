@@ -3,7 +3,7 @@ class AppDelegate
   def buildPrefsWindow
 
     # create the window and set it up
-    @prefsWindow = NSWindow.alloc.initWithContentRect([[240, 180], [480, 360]],
+    @prefsWindow = NSWindow.alloc.initWithContentRect([[240, 180], [360, 280]],
        styleMask: NSTitledWindowMask|NSClosableWindowMask,
        backing: NSBackingStoreBuffered,
        defer: true)
@@ -11,10 +11,10 @@ class AppDelegate
     @prefsWindow.delegate = self
     @prefsWindow.title = "#{@appName} Preferences"
 
-    buildParitionList
+    buildPreferenceFields
 
     # create a save button and attach it to the bottom of the window
-    save_button = NSButton.alloc.initWithFrame(NSMakeRect(240, 20, 60, 25))
+    save_button = NSButton.alloc.initWithFrame(NSMakeRect(280, 20, 60, 25))
     save_button.setBezelStyle NSRoundedBezelStyle
     save_button.setTitle 'Save'
     save_button.setAction 'savePreferences:'
@@ -22,11 +22,11 @@ class AppDelegate
 
   end
 
-  def buildParitionList
+  def buildPreferenceFields
     # yValue seems to be the location in pixels from the bottom of the window, so we decrement as we add lines
-    yValue = 318
+    yValue = 240
     # tag for assigning ints to NSControl objects so that we can group their values when we save
-    tag = 0
+    tag = 1
 
     # create field lables for columns
     addLabel 'Partition name', 20, yValue, 120, 22
@@ -49,6 +49,11 @@ class AppDelegate
       # inrement the tag for the next row
       tag = tag + 1
     end
+
+    yValue = yValue - 26
+    addLabel 'Path to org.chameleon.boot.plist', 20, yValue, 320, 22
+    yValue = yValue - 26
+    addTextField @preferences.plistPath, 0, 20, yValue, 320, 22
   end
 
   def savePreferences(sender)
@@ -59,6 +64,10 @@ class AppDelegate
     # remove the save button. i can refactor out the need to do this later
     # by putting all the partition forms in a subview
     @bootPartitionFields.delete(-1)
+    # likewise with the labels, damn it!
+    @bootPartitionFields.delete(0)
+
+    # puts "bpf #{@bootPartitionFields}"
 
     # initialize a new array to satisfy our preferences storage format
     @bootPartitionValues = []
@@ -68,11 +77,10 @@ class AppDelegate
       @bootPartitionValues << { name: fields[0].objectValue, reference: fields[1].objectValue, enabled: fields[2].objectValue, current: false }
     end
 
-    puts @bootPartitionValues
+    # puts "bpv #{@bootPartitionValues}"
 
     # set and syncronise the preferences
     @preferences.bootPartitions = @bootPartitionValues
-    @preferences.sync
 
   end
 
@@ -86,6 +94,7 @@ class AppDelegate
     label.setEditable(false)
     label.setSelectable(false)
     label.autoresizingMask = NSViewMinXMargin|NSViewMinYMargin|NSViewWidthSizable
+    label.setTag 0
     @prefsWindow.contentView.addSubview(label)
   end
 
