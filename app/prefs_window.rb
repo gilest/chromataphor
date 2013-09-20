@@ -16,6 +16,7 @@ class AppDelegate
     # create a save button and attach it to the bottom of the window
     save_button = NSButton.alloc.initWithFrame(NSMakeRect(280, 20, 60, 25))
     save_button.setBezelStyle NSRoundedBezelStyle
+    save_button.setKeyEquivalent "\r"
     save_button.setTitle 'Save'
     save_button.setAction 'savePreferences:'
     @prefsWindow.contentView.addSubview(save_button)
@@ -81,6 +82,10 @@ class AppDelegate
 
     # set and syncronise the preferences
     @preferences.bootPartitions = @bootPartitionValues
+
+    @prefsWindow.close
+
+    updatePartitionsInMenu
 
   end
 

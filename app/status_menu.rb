@@ -14,19 +14,6 @@ class AppDelegate
     # build a menu for it
     @statusMenu = NSMenu.alloc.initWithTitle(@appName)
 
-    # if there are no user added partitions eg. on a fresh launch
-    if @preferences.bootPartitions.empty?
-      item = NSMenuItem.alloc.initWithTitle("Add your partitions...", action: 'showPreferences', keyEquivalent: '')
-      @statusMenu.addItem item
-    else
-      # programatically build and add users boot partitions from their preferences file
-      @preferences.bootPartitions.each do |partition|
-        item = NSMenuItem.alloc.initWithTitle("Reboot to #{partition[:name]}", action: 'rebootTo:', keyEquivalent: '')
-        item.setRepresentedObject partition
-        @statusMenu.addItem item
-      end
-    end
-
     # separator
     @statusMenu.addItem NSMenuItem.separatorItem
 
@@ -45,6 +32,40 @@ class AppDelegate
     # set the built menu to the status item object
     @statusItem.setMenu(@statusMenu)
 
+  end
+
+  def updatePartitionsInMenu
+
+    # initialize partition menu items array if empty
+    @partitionMenuItems ||= []
+
+    # remove all previously added items
+    @partitionMenuItems.each do |menuItem|
+      @statusMenu.removeItem menuItem
+    end
+
+    # clear it out so that we're starting fresh
+    @partitionMenuItems = []
+
+    # if there are no user added partitions eg. on a fresh launch
+    if @preferences.bootPartitions.empty?
+      item = NSMenuItem.alloc.initWithTitle("Add your partitions...", action: 'showPreferences', keyEquivalent: '')
+      item.setTag 5
+      @partitionMenuItems << item
+      @statusMenu.insertItem item, atIndex: 0
+    else
+      # programatically build and add users boot partitions from their preferences file
+      @preferences.bootPartitions.reverse.each do |partition|
+        if partition[:enabled]
+          item = NSMenuItem.alloc.initWithTitle("Reboot to #{partition[:name]}", action: 'rebootTo:', keyEquivalent: '')
+          item.setRepresentedObject partition
+          item.setTag 5
+          @partitionMenuItems << item
+          @statusMenu.insertItem item, atIndex: 0
+        end
+      end
+    end
+    
   end
 
   private

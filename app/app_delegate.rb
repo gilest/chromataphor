@@ -16,6 +16,9 @@ class AppDelegate
 
     # finally, build our status menu itself
     buildStatusMenu
+
+    # and add the partitions to it
+    updatePartitionsInMenu
   end
 
 end
