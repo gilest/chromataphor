@@ -22,6 +22,14 @@ class Preferences
     sync
   end
 
+  def enabledPartitions
+    result = []
+    bootPartitions.each do |partition|
+      result << partition if partition[:enabled]
+    end
+    result
+  end
+
   def plistPath
     @preferences[:plistPath]
   end

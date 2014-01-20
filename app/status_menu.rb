@@ -48,21 +48,19 @@ class AppDelegate
     @partitionMenuItems = []
 
     # if there are no user added partitions eg. on a fresh launch
-    if @preferences.bootPartitions.empty?
+    if @preferences.enabledPartitions.empty?
       item = NSMenuItem.alloc.initWithTitle("Add your partitions...", action: 'showPreferences', keyEquivalent: '')
       item.setTag 5
       @partitionMenuItems << item
       @statusMenu.insertItem item, atIndex: 0
     else
       # programatically build and add users boot partitions from their preferences file
-      @preferences.bootPartitions.reverse.each do |partition|
-        if partition[:enabled]
-          item = NSMenuItem.alloc.initWithTitle("Reboot to #{partition[:name]}", action: 'rebootTo:', keyEquivalent: '')
-          item.setRepresentedObject partition
-          item.setTag 5
-          @partitionMenuItems << item
-          @statusMenu.insertItem item, atIndex: 0
-        end
+      @preferences.enabledPartitions.reverse.each do |partition|
+        item = NSMenuItem.alloc.initWithTitle("Reboot to #{partition[:name]}", action: 'rebootTo:', keyEquivalent: '')
+        item.setRepresentedObject partition
+        item.setTag 5
+        @partitionMenuItems << item
+        @statusMenu.insertItem item, atIndex: 0
       end
     end
     

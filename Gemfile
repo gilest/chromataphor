@@ -1,3 +1,3 @@
 source 'http://rubygems.org'
 
-gem "bubble-wrap", "~> 1.3.0.osx"
+gem "bubble-wrap", "~> 1.4.0"
